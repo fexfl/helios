@@ -11,6 +11,7 @@ from helios.scene import StaticScene, ScenePart
 from helios.settings import (
     ExecutionSettings,
     LogVerbosity,
+    OutputFormat,
     OutputSettings,
     ParallelizationStrategy,
     set_execution_settings,
