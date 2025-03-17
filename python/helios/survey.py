@@ -120,7 +120,11 @@ class Survey(Model, cpp_class=_helios.Survey):
         if output_settings.format in (OutputFormat.NPY, OutputFormat.LASPY):
             measurements = self.scanner._cpp_object.all_measurements
 
-            trajectories = self.scanner._cpp_object.all_trajectories
+            try:
+                trajectories = self.scanner._cpp_object.all_trajectories
+            except RuntimeError:
+                trajectories = None
+
             temp_dir_obj.cleanup()
 
             if output_settings.format == OutputFormat.NPY:
