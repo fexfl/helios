@@ -1,5 +1,6 @@
 from helios.scene import *
 
+import os
 import math
 import numpy as np
 import pytest
@@ -218,3 +219,17 @@ def test_transform_scenepart(box_f):
     bbox2 = get_bbox(box2)
 
     assert np.allclose(bbox1 + offset, bbox2)
+
+def test_scene_binary():
+    scene = StaticScene.from_xml("data/scenes/toyblocks/toyblocks_scene.xml")
+
+
+    scene.to_binary("data/scenes/toyblocks/toyblocks1.scene")
+    assert os.path.exists("data/scenes/toyblocks/toyblocks1.scene")
+
+    # Load from binary
+    loaded_scene = StaticScene.from_binary("data/scenes/toyblocks/toyblocks1.scene")
+
+    os.remove("data/scenes/toyblocks/toyblocks1.scene")
+    assert len(scene.scene_parts) == len(loaded_scene.scene_parts)
+    assert len(scene.scene_parts[0]._cpp_object.primitives) == len(loaded_scene.scene_parts[0]._cpp_object.primitives)

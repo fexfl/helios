@@ -5,6 +5,7 @@ from helios.validation import AssetPath, Model, MultiAssetPath, validate_xml_fil
 from numpydantic import NDArray, Shape
 from pydantic import PositiveFloat, NonNegativeFloat, NonNegativeInt, validate_call
 from typing import Literal, Optional
+from pathlib import Path
 
 import numpy as np
 
@@ -284,3 +285,14 @@ class StaticScene(Model, cpp_class=_helios.StaticScene):
             str(scene_file), [str(p) for p in get_asset_directories()], True, True
         )
         return cls._from_cpp(_cpp_scene)
+    
+    @classmethod
+    @validate_call
+    def from_binary(cls, filename: Path):    
+        _cpp_scene = _helios.read_scene_from_binary(str(filename))
+        return cls._from_cpp(_cpp_scene)
+
+    def to_binary(self, filename: Path, is_dyn_scene: bool = False):
+        _helios.write_scene_to_binary(str(filename), self._cpp_object, is_dyn_scene)
+		
+	
