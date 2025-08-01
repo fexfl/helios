@@ -12,7 +12,7 @@ template<typename... TaskArgs>
 class SimpleThreadPool : public ThreadPool
 {
 protected:
-  using ThreadPool::io_service_;
+  using ThreadPool::io_context_;
   using ThreadPool::pool_size;
   // ***  ATTRIBUTES  *** //
   // ******************** //
@@ -68,9 +68,10 @@ public:
     lock.unlock();
 
     // Post a wrapped task into the queue
-    io_service_.post(boost::bind(&SimpleThreadPool::wrap_task,
-                                 this,
-                                 boost::function<void(TaskArgs...)>(task)));
+    io_context_.get_executor().post(
+      boost::bind(&SimpleThreadPool::wrap_task,
+                  this,
+                  boost::function<void(TaskArgs...)>(task)));
   }
 
   /**

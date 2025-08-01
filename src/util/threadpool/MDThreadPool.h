@@ -53,7 +53,7 @@ public:
     lock.unlock();
 
     // Post a wrapped task into the queue
-    this->io_service_.post(
+    this->io_context_.get_executor().post(
       boost::bind(&MDThreadPool<MDType, TaskArgs...>::wrap_md_task,
                   this,
                   boost::function<void(TaskArgs...)>(task),
@@ -88,7 +88,7 @@ public:
     lock.unlock();
 
     // Post a wrapped task into the queue
-    this->io_service_.post(
+    this->io_context_.get_executor().post(
       boost::bind(&MDThreadPool<MDType, TaskArgs...>::wrap_md_task,
                   this,
                   boost::function<void(TaskArgs...)>(task),
